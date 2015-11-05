@@ -12,8 +12,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.Data.OleDb;
-using System.Data;
 
 namespace WpfApplication1
 {
@@ -22,9 +20,11 @@ namespace WpfApplication1
     /// </summary>
     public partial class MainWindow : Window
     {
+        String path="H:\\Технол.программ.2014\\ЛАБЫ\\WpfApplication1\\BD.accdb";
         public MainWindow()
         {
             InitializeComponent();
+
         }
 
         private void btnEvents_Click(object sender, RoutedEventArgs e)
@@ -36,16 +36,9 @@ namespace WpfApplication1
             btnNewEvent.Visibility = Visibility.Visible;
             newEventGrid.Visibility = Visibility.Hidden;
             configGrid.Visibility = Visibility.Hidden;
-            OleDbConnection con = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=H:\\Технол.программ.2014\\ЛАБЫ\\WpfApplication1\\BD.accdb");
-            con.Open();
 
-            OleDbDataAdapter da = new OleDbDataAdapter("SELECT * From Мероприятия;", con);
-            OleDbCommandBuilder cb = new OleDbCommandBuilder(da);
-            DataSet ds = new DataSet();
+            CDataBase.TableWrite(path, "Мероприятия", eventsGridData);
 
-            da.Fill(ds, "Мероприятия");
-            eventsGridData.ItemsSource = ds.Tables["Мероприятия"].DefaultView;
-            con.Close();
 
         }
 
@@ -58,16 +51,7 @@ namespace WpfApplication1
             newEventGrid.Visibility = Visibility.Hidden;
             configGrid.Visibility = Visibility.Hidden;
 
-            OleDbConnection con = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=H:\\Технол.программ.2014\\ЛАБЫ\\WpfApplication1\\BD.accdb");
-            con.Open();
-
-            OleDbDataAdapter da = new OleDbDataAdapter("SELECT * From ДР;", con);
-            OleDbCommandBuilder cb = new OleDbCommandBuilder(da);
-            DataSet ds = new DataSet();
-
-            da.Fill(ds, "ДР");
-            birthDayGridData.ItemsSource = ds.Tables["ДР"].DefaultView;
-            con.Close();
+            CDataBase.TableWrite(path, "ДР", birthDayGridData);
         }
 
         private void btnNewEvent_Click(object sender, RoutedEventArgs e)
@@ -111,20 +95,16 @@ namespace WpfApplication1
   
           
 
-            OleDbConnection con = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=H:\\Технол.программ.2014\\ЛАБЫ\\WpfApplication1\\BD.accdb");
-            con.Open();
-            String s1, s2, s3;
-            s1 = tbEventName.Text.ToString();
-            s2 = tbEventDescription.Text.ToString();
-            s3 = dateOfEvent.Text.ToString() +" "+ tbHours.Text.ToString() +":"+ tbMinuts.Text.ToString();
+
+            String date, name, description;
+            name = tbEventName.Text.ToString();
+            description = tbEventDescription.Text.ToString();
+            date = dateOfEvent.Text.ToString() + " " + tbHours.Text.ToString() + ":" + tbMinuts.Text.ToString();
+
+            CDataBase.insertEvent(path, date, name, description);
            
 
-            OleDbCommand cmd=new OleDbCommand("INSERT INTO Мероприятия (Дата, Название, Описание)" + " VALUES (?, ?, ?)", con);
-            cmd.Parameters.Add("Дата",OleDbType.Date, 30).Value=s3;
-            cmd.Parameters.Add("Название",OleDbType.VarWChar, 30).Value=s1;
-            cmd.Parameters.Add("Описание",OleDbType.VarWChar, 30).Value=s2;            
-            cmd.ExecuteNonQuery();
-            con.Close();
+
 
         }
 
