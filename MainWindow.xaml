@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApplication1"
         mc:Ignorable="d"
-        Title="Твой секретарь" Height="350" Width="550" MinHeight="350" MinWidth="550" Icon="H:\Технол.программ.2014\ЛАБЫ\center.png" Initialized="mainWindow_Initialized" >
+        Title="Твой секретарь" Height="350" Width="550" MinHeight="350" MinWidth="550" Icon="C:\Users\Vladislav\Desktop\window.png" Initialized="mainWindow_Initialized" >
 
     <!--Подключаем ресурс окна, а именно шаблон кнопки-->
     <Window.Resources>
@@ -53,16 +53,16 @@
         <Rectangle Fill="#FF7598A6" HorizontalAlignment="Stretch" Height="40" Stroke="Black" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
 
         <!--Кнопка открывающая настройки-->
-        <Button x:Name="btnConfigs" Content="Настройки" Background="#FF4AA8F5" 
+        <Button x:Name="btnConfigs" Content="☼" Background="#FF4AA8F5" 
                 HorizontalAlignment="Left" VerticalAlignment="Stretch" Grid.Row="0" 
-                Grid.Column="0" Cursor="Hand" FontSize="24" FontFamily="Microsoft YaHei UI Light" 
-                FontWeight="Bold" Height="Auto" Width="150" Foreground="White" Click="btnConfigs_Click"  Template="{StaticResource ButtonTemplate}">
+                Grid.Column="0" Cursor="Hand" FontSize="24" FontFamily="Segoe UI Black" 
+                FontWeight="Bold" Height="Auto" Width="40" Foreground="White" Click="btnConfigs_Click"  Template="{StaticResource ButtonTemplate}">
         </Button>
 
         <!--Кнопка открывающая панель добавления нового мероприятия-->
-        <Button x:Name="btnNewEvent" Content="Создать" Background="#FF4AA8F5" HorizontalAlignment="Right" 
+        <Button x:Name="btnNewEvent" Content="✎" Background="#FF4AA8F5" HorizontalAlignment="Right" 
                 VerticalAlignment="Stretch" Grid.Row="0" Grid.Column="1" Cursor="Hand" FontSize="24" 
-                FontFamily="Microsoft YaHei UI Light" FontWeight="Bold" Height="Auto" Width="150" Foreground="White" Click="btnNewEvent_Click" Template="{StaticResource ButtonTemplate}" >
+                FontFamily="Segoe UI Black" FontWeight="Bold" Height="Auto" Width="40" Foreground="White" Click="btnNewEvent_Click" Template="{StaticResource ButtonTemplate}" FontStyle="Italic" >
         </Button>
 
         <!--Заголовок. Показывает где находится пользователь-->
@@ -70,7 +70,7 @@
                Grid.ColumnSpan="2" Foreground="White" FontFamily="Microsoft YaHei UI" FontSize="18.667" FontWeight="Bold"/>
 
         <!--Картинка по центру программы при её старте-->
-        <Image x:Name="image" Source="H:\Технол.программ.2014\ЛАБЫ\center.png" VerticalAlignment="Center" 
+        <Image x:Name="image" Source="C:\Users\Vladislav\Desktop\center.png" VerticalAlignment="Center" 
                HorizontalAlignment="Center" Height="46" Width="186" Opacity="0.8" Grid.Row="1" Grid.ColumnSpan="2" OpacityMask="White" />
 
         <!--Панель со списком мероприятий-->
@@ -94,25 +94,26 @@
             </Grid.RowDefinitions>
             <!--Столбцы-->
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="271*"/>
+                <ColumnDefinition Width="224*"/>
+                <ColumnDefinition Width="47*"/>
             </Grid.ColumnDefinitions>
 
             <Label x:Name="lblEventName" Content="Название:" HorizontalAlignment="Center" 
-                   VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" Foreground="Black" FontFamily="Microsoft Sans Serif" FontSize="13.333" />
+                   VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" Foreground="Black" FontFamily="Microsoft Sans Serif" FontSize="13.333" Margin="98,2,99,2" />
             <Label x:Name="lblEventDescription" Content="Описание:" HorizontalAlignment="Center" 
-                   VerticalAlignment="Center" Grid.Column="0" Grid.Row="1" Foreground="Black" FontFamily="Microsoft Sans Serif" FontSize="13.333" />
+                   VerticalAlignment="Center" Grid.Column="0" Grid.Row="1" Foreground="Black" FontFamily="Microsoft Sans Serif" FontSize="13.333" Margin="98,32" />
             <Label x:Name="lblEventDate" Content="Дата и время:" HorizontalAlignment="Center" 
-                   VerticalAlignment="Center" Grid.Column="0" Grid.Row="2" Foreground="Black" FontFamily="Microsoft Sans Serif" FontSize="13.333" />
+                   VerticalAlignment="Center" Grid.Column="0" Grid.Row="2" Foreground="Black" FontFamily="Microsoft Sans Serif" FontSize="13.333" Margin="86,23,87,23" />
             <Button x:Name="btnAddEvent" Content="Добавить" Background="#FF4AA8F5" 
                 HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Row="3" 
                 Grid.Column="0" Cursor="Hand" FontSize="16" FontFamily="Microsoft YaHei UI Light" 
-                FontWeight="Bold" Height="30" Width="150" Foreground="White" Click="btnAddEvent_Click"  Grid.ColumnSpan="2"  Template="{StaticResource ButtonTemplate}">
+                FontWeight="Bold" Height="30" Width="150" Foreground="White" Click="btnNewEvent_Click"  Grid.ColumnSpan="2"  Template="{StaticResource ButtonTemplate}" Margin="196,0,149,0">
             </Button>
 
-            <TextBox x:Name="tbEventName" Grid.Column="1" Grid.Row="0" Text="Название" VerticalAlignment="Center" MaxLength="50" HorizontalAlignment="Stretch"/>
-            <TextBox x:Name="tbEventDescription" Grid.Column = "1" Grid.Row = "1" TextWrapping="Wrap" Text="Описание" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" AcceptsReturn="True"/>
-            <Grid Grid.Column="1"  Grid.Row="2">
+            <TextBox x:Name="tbEventName" Grid.Column="1" Grid.Row="0" Text="Название" VerticalAlignment="Center" MaxLength="50" HorizontalAlignment="Stretch" Grid.ColumnSpan="2" Margin="0,6"/>
+            <TextBox x:Name="tbEventDescription" Grid.Column = "1" Grid.Row = "1" TextWrapping="Wrap" Text="Описание" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" AcceptsReturn="True" Grid.ColumnSpan="2"/>
+            <Grid Grid.Column="1"  Grid.Row="2" Grid.ColumnSpan="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition  Width="120"/>
                     <ColumnDefinition Width="60"/>
