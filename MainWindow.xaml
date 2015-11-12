@@ -4,31 +4,50 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing" mc:Ignorable="d"
         xmlns:local="clr-namespace:WpfApplication1"
-        mc:Ignorable="d"
-        Title="Твой секретарь" Height="350" Width="550" MinHeight="350" MinWidth="550" Icon="C:\Users\Vladislav\Desktop\window.png" Initialized="mainWindow_Initialized" >
+        Title="Твой секретарь" Height="900" Width="640" Loaded="Window1_Loaded" WindowStartupLocation="CenterScreen"
+        MinHeight="900" MinWidth="640" Icon="C:\Users\Vladislav\Desktop\window.png" Initialized="mainWindow_Initialized" >
 
     <!--Подключаем ресурс окна, а именно шаблон кнопки-->
     <Window.Resources>
+        <!--Шаблон кнопки-->
         <ControlTemplate x:Key="ButtonTemplate" TargetType="Button">
             <Border BorderBrush="#FF13344F" BorderThickness="1" Name="border"  Cursor="Hand"
-                    TextBlock.Foreground="White" Background="#FF4AA8F5" TextBlock.TextAlignment="Center" TextBlock.LineHeight="60">
+                    TextBlock.Foreground="White" Background="#3C9DD0" TextBlock.TextAlignment="Center" TextBlock.LineHeight="60">
                 <ContentPresenter RecognizesAccessKey="True" Margin="{TemplateBinding Padding}"></ContentPresenter>
             </Border>
             <ControlTemplate.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter TargetName="border" Property="Background" Value="#FF13344F"></Setter>
+                    <Setter TargetName="border" Property="Background" Value="#086CA2"></Setter>
                 </Trigger>
             </ControlTemplate.Triggers>
         </ControlTemplate>
+
+        <!--Часики-->
+        <Storyboard x:Key="OnLoaded1">
+            <DoubleAnimation x:Name="secondAnimation" Storyboard.TargetName="secondArc" Storyboard.TargetProperty="StartAngle" 
+Duration="0:1:0" RepeatBehavior="Forever" By="360" />
+            <DoubleAnimation x:Name="minuteAnimation" Storyboard.TargetName="minuteArc" Storyboard.TargetProperty="StartAngle" 
+Duration="1:0:0" RepeatBehavior="Forever" By="360" />
+            <DoubleAnimation x:Name="hourAnimation" Storyboard.TargetName="hourArc" Storyboard.TargetProperty="StartAngle" 
+Duration="24:0:0" RepeatBehavior="Forever" By="360" />
+        </Storyboard>
     </Window.Resources>
+
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+            <BeginStoryboard x:Name="OnLoaded1_BeginStoryboard" Storyboard="{StaticResource OnLoaded1}"/>
+        </EventTrigger>
+    </Window.Triggers>
+
     <!--Создаём сетку размера 3 на 2-->
     <Grid>
         <!--Строки-->
         <Grid.RowDefinitions>
             <RowDefinition Height="40"></RowDefinition>
-            <RowDefinition Height="100*"></RowDefinition>
             <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition Height="100*"></RowDefinition>
         </Grid.RowDefinitions>
         <!--Столбцы-->
         <Grid.ColumnDefinitions>
@@ -36,58 +55,156 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <!--Кнопка открывающая список мероприятий-->
+        
+        <Grid x:Name="hatGrid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" Grid.ColumnSpan="2" Background="White">
+            
+            <!--Столбцы-->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <!--Кнопка открывающая список мероприятий-->
         <Button x:Name="btnEvents" HorizontalAlignment="Stretch" 
-                VerticalAlignment="Stretch" Grid.Row="2" Grid.Column="0" FontSize="24" 
-                FontFamily="Microsoft YaHei UI Light" FontWeight="Bold" Height="Auto" Width="Auto" Click="btnEvents_Click"
+                VerticalAlignment="Stretch" Grid.Row="0" Grid.Column="0" FontSize="30" 
+                FontFamily="Segoe UI Semibold" FontWeight="Bold" Height="Auto" Width="Auto" Click="btnEvents_Click"
                 Template="{StaticResource ButtonTemplate}">Мероприятия
         </Button>
 
-        <!--Кнопка открывающая список дней рождений-->
+            <!--Домашняя кнопка - доступно и честно-->
+            <Button x:Name="btnHomePage"  Background="#FF4AA8F5" HorizontalAlignment="Stretch" 
+                VerticalAlignment="Stretch" Grid.Row="2" Grid.Column="1" Cursor="Hand" FontSize="30"
+                FontWeight="Bold" Height="Auto" Width="Auto" Foreground="#FFFBFBFB" 
+                BorderBrush="#FF13344F" OpacityMask="#FFEE1B1B" Click="btnHomePage_Click" Template="{StaticResource ButtonTemplate}" FontStretch="Expanded">
+                <Image x:Name="btnIcon" Source="C:\Users\Vladislav\Desktop\domic.png" VerticalAlignment="Center" 
+               HorizontalAlignment="Center" Height="50" Width="50" Grid.Row="2" Grid.ColumnSpan="2" OpacityMask="White" />
+            </Button>
+
+            <!--Кнопка открывающая список дней рождений-->
         <Button x:Name="btnBirthDay" Content="Дни Рождения" Background="#FF4AA8F5" HorizontalAlignment="Stretch" 
-                VerticalAlignment="Stretch" Grid.Row="2" Grid.Column="1" Cursor="Hand" FontSize="24" FontFamily="Microsoft YaHei UI Light" 
+                VerticalAlignment="Stretch" Grid.Row="2" Grid.Column="2" Cursor="Hand" FontSize="30" FontFamily="Segoe UI Semibold" FontStretch="Expanded"
                 FontWeight="Bold" Height="Auto" Width="Auto" Foreground="#FFFBFBFB" 
                 BorderBrush="#FF13344F" OpacityMask="#FFEE1B1B" Click="btnBirthDay_Click" Template="{StaticResource ButtonTemplate}" />
-
+            
+        </Grid>
         <!--Синяя полоска сверху-->
-        <Rectangle Fill="#FF7598A6" HorizontalAlignment="Stretch" Height="40" Stroke="Black" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-
-        <!--Кнопка открывающая настройки-->
-        <Button x:Name="btnConfigs" Content="☼" Background="#FF4AA8F5" 
-                HorizontalAlignment="Left" VerticalAlignment="Stretch" Grid.Row="0" 
-                Grid.Column="0" Cursor="Hand" FontSize="24" FontFamily="Segoe UI Black" 
-                FontWeight="Bold" Height="Auto" Width="40" Foreground="White" Click="btnConfigs_Click"  Template="{StaticResource ButtonTemplate}">
-        </Button>
-
-        <!--Кнопка открывающая панель добавления нового мероприятия-->
-        <Button x:Name="btnNewEvent" Content="✎" Background="#FF4AA8F5" HorizontalAlignment="Right" 
-                VerticalAlignment="Stretch" Grid.Row="0" Grid.Column="1" Cursor="Hand" FontSize="24" 
-                FontFamily="Segoe UI Black" FontWeight="Bold" Height="Auto" Width="40" Foreground="White" Click="btnNewEvent_Click" Template="{StaticResource ButtonTemplate}" FontStyle="Italic" >
-        </Button>
+        <Rectangle Fill="#235B79" HorizontalAlignment="Stretch" Height="40" Stroke="Black" VerticalAlignment="Top" Grid.ColumnSpan="2" Grid.Row="0"/>
 
         <!--Заголовок. Показывает где находится пользователь-->
         <Label x:Name="lblWhereWeAre" Content="Добро пожаловать" HorizontalAlignment="Center" VerticalAlignment="Center" 
-               Grid.ColumnSpan="2" Foreground="White" FontFamily="Microsoft YaHei UI" FontSize="18.667" FontWeight="Bold"/>
+               Grid.ColumnSpan="2" Grid.Row="0" Foreground="White" FontFamily="Microsoft YaHei UI" FontSize="18.667" FontWeight="Bold"/>
 
-        <!--Картинка по центру программы при её старте-->
-        <Image x:Name="image" Source="C:\Users\Vladislav\Desktop\center.png" VerticalAlignment="Center" 
-               HorizontalAlignment="Center" Height="46" Width="186" Opacity="0.8" Grid.Row="1" Grid.ColumnSpan="2" OpacityMask="White" />
+        <!--Панель домашней страницы-->
+        <Grid x:Name="homeGrid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="2" Grid.ColumnSpan="2" Background="White">
+            <!--Строки-->
+            <Grid.RowDefinitions>
+                <RowDefinition Height="300"></RowDefinition>
+                <RowDefinition Height="40"></RowDefinition>
+                <RowDefinition Height="50*"></RowDefinition>
+                <RowDefinition Height="60"></RowDefinition>
+                <RowDefinition Height="60"></RowDefinition>
+            </Grid.RowDefinitions>
 
+            <!--Лейбл на главной странице-->
+            <Label x:Name="lblHomeEvents" Content="Ваши ближайшие мероприятия:" HorizontalAlignment="Center" 
+                   VerticalAlignment="Top" Grid.Row="1" Foreground="#FF35485B" FontFamily="Segoe WP Semibold" FontSize="20" Margin="98,2,99,2" FontWeight="Bold" />
+
+            <!--Картинка с ссылкой на сайт миэт-->
+            <Image x:Name="image" Source="C:\Users\Vladislav\Desktop\center.png" VerticalAlignment="Top" 
+               HorizontalAlignment="Center" Height="46" Width="186" Opacity="0.8" Grid.Row="4" OpacityMask="White" Cursor="Hand" MouseDown="image_MouseDown" />
+
+            <!--Ближайшие события-->
+            <DataGrid x:Name="homeEventsGridData" Grid.Row="2" TextBlock.TextAlignment="Center" VerticalAlignment="Top" HorizontalAlignment="Center" Width="Auto" Height="Auto"
+                          RowHeight="50" ColumnWidth="20*" FontSize="16" FontFamily="Segoe Print"
+                          VerticalGridLinesBrush="#235B79" HorizontalGridLinesBrush="#235B79">
+
+            </DataGrid>
+
+            <!--Кнопка открывающая настройки-->
+            <Button x:Name="btnConfigs" Content="Настройки" Background="#FF4AA8F5" 
+                HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Row="3"
+                Cursor="Hand" FontSize="16" FontFamily="Segoe UI Semibold" 
+                FontWeight="Bold" Height="30" Width="150" Foreground="White" Click="btnConfigs_Click"  Template="{StaticResource ButtonTemplate}">
+            </Button>
+            
+            <!--Отдельная сетка для часов-->
+            <Grid x:Name="clockGrid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0" Background="White">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="260"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <!--Часики-->
+                <Canvas Background="White" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="1">
+                    <TextBlock Height="24.667" x:Name="date" TextWrapping="Wrap" FontSize="13.333" FontWeight="Bold" Background="{x:Null}" Width="88.667" Foreground="#64AAD0" FontFamily="Segoe UI Semibold" Canvas.Left="102"
+Canvas.Top="150">
+                        <TextBlock.Effect>
+                            <DropShadowEffect ShadowDepth="0" Color="#FF5EE5FF" BlurRadius="4"/>
+                        </TextBlock.Effect>
+                    </TextBlock>
+                    <ed:Arc x:Name="secondArc" ArcThickness="12" ArcThicknessUnit="Pixel" EndAngle="360" Stretch="None" StartAngle="0" Fill="#FF4AA8F5"
+HorizontalAlignment="Center" Width="260" Height="260" VerticalAlignment="Center" Canvas.Left="0" Canvas.Top="10" >
+                        <ed:Arc.Effect>
+                            <DropShadowEffect Color="#FF6BB8F7" BlurRadius="11" ShadowDepth="0"/>
+                        </ed:Arc.Effect>
+                    </ed:Arc>
+                    <ed:Arc x:Name="minuteArc" ArcThickness="15" ArcThicknessUnit="Pixel" EndAngle="360" Stretch="None" StartAngle="0" Fill="#FF4AA8F5"
+HorizontalAlignment="Center" Width="210" Height="210" VerticalAlignment="Center" Canvas.Left="25" Canvas.Top="35" >
+                        <ed:Arc.Effect>
+                            <DropShadowEffect Color="#FF6BB8F7" BlurRadius="11" ShadowDepth="0"/>
+                        </ed:Arc.Effect>
+                    </ed:Arc>
+                    <ed:Arc x:Name="hourArc" ArcThickness="15" ArcThicknessUnit="Pixel" EndAngle="360" Stretch="None" StartAngle="0" Fill="#FF4AA8F5"
+HorizontalAlignment="Center" Width="150" Height="150" VerticalAlignment="Center" Canvas.Left="55" Canvas.Top="65" >
+                        <ed:Arc.Effect>
+                            <DropShadowEffect Color="#FF6BB8F7" BlurRadius="11" ShadowDepth="0"/>
+                        </ed:Arc.Effect>
+                    </ed:Arc>
+                    <TextBlock x:Name="time" Height="35.667" Canvas.Left="87" TextWrapping="Wrap" Canvas.Top="115" Width="94.333" FontSize="24.667"
+FontFamily="Segoe WP Semibold" Foreground="#64AAD0" RenderTransformOrigin="0.479,0.467">
+                        <TextBlock.Effect>
+                            <DropShadowEffect BlurRadius="4" Color="#FF1DD4F7" ShadowDepth="0"/>
+                        </TextBlock.Effect>
+                    </TextBlock>
+                </Canvas>
+            </Grid>
+            
+            
+        </Grid>
+        
         <!--Панель со списком мероприятий-->
-        <Grid x:Name="eventGrid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" Grid.ColumnSpan="2" Background="White">
-            <DataGrid x:Name="eventsGridData" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        <Grid x:Name="eventGrid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="2" Grid.ColumnSpan="2" Background="White">
+            <Grid x:Name="eventGrid2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="2" Grid.ColumnSpan="2" Background="White">
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition Height="60"></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <DataGrid x:Name="eventsGridData" Grid.Row="0" TextBlock.TextAlignment="Center" VerticalAlignment="Stretch" 
+                          RowHeight="50" ColumnWidth="20*" FontSize="16" FontFamily="Segoe Print"
+                          VerticalGridLinesBrush="#235B79" HorizontalGridLinesBrush="#235B79">
+                    
+                </DataGrid>
+
+                <!--Кнопка открывающая панель добавления нового мероприятия-->
+                <Button x:Name="btnNewEvent" Content="Создать" Background="#FF4AA8F5" HorizontalAlignment="Center" 
+                VerticalAlignment="Center" Grid.Row="1" Grid.Column="1" Cursor="Hand" FontSize="24" 
+                FontFamily="Segoe UI Semibold" FontWeight="Bold" Height="40" Width="200" Foreground="White" Click="btnNewEvent_Click" Template="{StaticResource ButtonTemplate}" FontStyle="Italic">
+                </Button>
+                
+            </Grid>
         </Grid>
 
         <!--Панель со списком дней рождений-->
-        <Grid x:Name="birhtDayGrid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" Grid.ColumnSpan="2" Background="White">
+        <Grid x:Name="birhtDayGrid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="2" Grid.ColumnSpan="2" Background="White">
             <DataGrid x:Name="birthDayGridData" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
         </Grid>
 
         <!--Панель добавления мероприятия-->
-        <Grid x:Name="newEventGrid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" Grid.ColumnSpan="2" Background="White">
+        <Grid x:Name="newEventGrid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="2" Grid.ColumnSpan="2" Background="White">
             <!--Строки-->
             <Grid.RowDefinitions>
-                <RowDefinition Height="30"></RowDefinition>
+                <RowDefinition Height="50"></RowDefinition>
                 <RowDefinition Height="100*"></RowDefinition>
                 <RowDefinition Height="80*"></RowDefinition>
                 <RowDefinition Height="40"></RowDefinition>
@@ -100,15 +217,15 @@
             </Grid.ColumnDefinitions>
 
             <Label x:Name="lblEventName" Content="Название:" HorizontalAlignment="Center" 
-                   VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" Foreground="Black" FontFamily="Microsoft Sans Serif" FontSize="13.333" Margin="98,2,99,2" />
+                   VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" Foreground="Black" FontFamily="Yu Gothic UI Semibold" FontSize="18" Margin="98,2,99,2" />
             <Label x:Name="lblEventDescription" Content="Описание:" HorizontalAlignment="Center" 
-                   VerticalAlignment="Center" Grid.Column="0" Grid.Row="1" Foreground="Black" FontFamily="Microsoft Sans Serif" FontSize="13.333" Margin="98,32" />
+                   VerticalAlignment="Center" Grid.Column="0" Grid.Row="1" Foreground="Black" FontFamily="Yu Gothic UI Semibold" FontSize="18" Margin="98,32" />
             <Label x:Name="lblEventDate" Content="Дата и время:" HorizontalAlignment="Center" 
-                   VerticalAlignment="Center" Grid.Column="0" Grid.Row="2" Foreground="Black" FontFamily="Microsoft Sans Serif" FontSize="13.333" Margin="86,23,87,23" />
-            <Button x:Name="btnAddEvent" Content="Добавить" Background="#FF4AA8F5" 
+                   VerticalAlignment="Center" Grid.Column="0" Grid.Row="2" Foreground="Black" FontFamily="Yu Gothic UI Semibold" FontSize="18" Margin="86,23,87,23" />
+            <Button x:Name="btnAddEvent" Content="Сохранить" Background="#FF4AA8F5" 
                 HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Row="3" 
                 Grid.Column="0" Cursor="Hand" FontSize="16" FontFamily="Microsoft YaHei UI Light" 
-                FontWeight="Bold" Height="30" Width="150" Foreground="White" Click="btnNewEvent_Click"  Grid.ColumnSpan="2"  Template="{StaticResource ButtonTemplate}" Margin="196,0,149,0">
+                FontWeight="Bold" Height="30" Width="150" Foreground="White" Click="btnAddEvent_Click"  Grid.ColumnSpan="2"  Template="{StaticResource ButtonTemplate}" Margin="196,0,149,0">
             </Button>
 
             <TextBox x:Name="tbEventName" Grid.Column="1" Grid.Row="0" Text="Название" VerticalAlignment="Center" MaxLength="50" HorizontalAlignment="Stretch" Grid.ColumnSpan="2" Margin="0,6"/>
@@ -130,8 +247,9 @@
                    VerticalAlignment="Center" Grid.Column="3" Foreground="Black" FontFamily="Microsoft Sans Serif" FontSize="13.333" />
             </Grid>
         </Grid>
+        
         <!--Панель с настройками-->
-        <Grid x:Name="configGrid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" Grid.ColumnSpan="2" Background="White">
+        <Grid x:Name="configGrid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="2" Grid.ColumnSpan="2" Background="White">
 
         </Grid>
     </Grid>
