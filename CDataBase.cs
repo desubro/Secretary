@@ -14,8 +14,11 @@ namespace WpfApplication1
         {
             OleDbConnection con = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source="+path);
             con.Open();
-
-            OleDbDataAdapter da = new OleDbDataAdapter("SELECT * From "+ table+ ";", con);
+            OleDbDataAdapter da;
+             if (table=="ДР")
+                da = new OleDbDataAdapter("SELECT * From " + table + ";", con);
+            else
+                da = new OleDbDataAdapter("SELECT Дата, Название, Описание From " + table + ";", con);           
             OleDbCommandBuilder cb = new OleDbCommandBuilder(da);
             DataSet ds = new DataSet();
 
