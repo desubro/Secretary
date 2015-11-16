@@ -18,7 +18,7 @@ namespace WpfApplication1
              if (table=="ДР")
                 da = new OleDbDataAdapter("SELECT * From " + table + ";", con);
             else
-                da = new OleDbDataAdapter("SELECT Дата, Название, Описание From " + table + ";", con);           
+                 da = new OleDbDataAdapter("SELECT Дата, Название, Описание From " + table + " ORDER BY Дата;", con);           
             OleDbCommandBuilder cb = new OleDbCommandBuilder(da);
             DataSet ds = new DataSet();
 
@@ -35,6 +35,15 @@ namespace WpfApplication1
             cmd.Parameters.Add("Дата", OleDbType.Date, 30).Value = date;
             cmd.Parameters.Add("Название", OleDbType.VarWChar, 30).Value = name;
             cmd.Parameters.Add("Описание", OleDbType.VarWChar, 30).Value = description;
+            cmd.ExecuteNonQuery();
+            con.Close();
+        }
+
+        public static void EventRowDelete(String path, int rowId)
+        {
+            OleDbConnection con = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + path);
+            con.Open();
+            OleDbCommand cmd = new OleDbCommand("DELETE * FROM  Мероприятия WHERE Код = "+ rowId, con);
             cmd.ExecuteNonQuery();
             con.Close();
         }
