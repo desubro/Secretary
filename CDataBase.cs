@@ -10,15 +10,29 @@ namespace WpfApplication1
 {
     static class CDataBase
     {
-        public static void TableWrite(String path,String table, DataGrid GridData)
+        public static void TableWrite(String path, String table, DataGrid GridData)
         {
-            OleDbConnection con = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source="+path);
+            OleDbConnection con = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + path);
             con.Open();
             OleDbDataAdapter da;
-             if (table=="ДР")
+            if (table == "ДР")
                 da = new OleDbDataAdapter("SELECT * From " + table + ";", con);
             else
-                 da = new OleDbDataAdapter("SELECT Дата, Название, Описание From " + table + " ORDER BY Дата;", con);           
+            da = new OleDbDataAdapter("SELECT Код, Дата, Название, Описание From " + table + " ORDER BY Дата;", con);
+            OleDbCommandBuilder cb = new OleDbCommandBuilder(da);
+            DataSet ds = new DataSet();
+
+            da.Fill(ds, table);
+            GridData.ItemsSource = ds.Tables[table].DefaultView;
+            con.Close();
+        }
+
+        public static void TableWriteLimit(String path, String table, DataGrid GridData)
+        {
+            OleDbConnection con = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + path);
+            con.Open();
+            OleDbDataAdapter da;
+            da = new OleDbDataAdapter("SELECT DISTINCT TOP 4 Дата, Название, Описание From " + table + " ORDER BY Дата;", con);
             OleDbCommandBuilder cb = new OleDbCommandBuilder(da);
             DataSet ds = new DataSet();
 
@@ -43,7 +57,7 @@ namespace WpfApplication1
         {
             OleDbConnection con = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + path);
             con.Open();
-            OleDbCommand cmd = new OleDbCommand("DELETE * FROM  Мероприятия WHERE Код = "+ rowId, con);
+            OleDbCommand cmd = new OleDbCommand("DELETE * FROM  Мероприятия WHERE Код = " + rowId, con);
             cmd.ExecuteNonQuery();
             con.Close();
         }
