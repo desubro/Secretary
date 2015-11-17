@@ -6,8 +6,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing" mc:Ignorable="d"
         xmlns:local="clr-namespace:WpfApplication1"
-        Title="Твой секретарь" Height="900" Width="640" Loaded="Window1_Loaded" WindowStartupLocation="CenterScreen"
-        MinHeight="900" MinWidth="640" Icon="C:\Users\Vladislav\Desktop\window.png" Initialized="mainWindow_Initialized" >
+        xmlns:wpfTool="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit"
+        Title="Твой секретарь" MinHeight="800" MinWidth="600" Height="800.6" Width="600.2" Loaded="Window1_Loaded" WindowStartupLocation="CenterScreen"
+        Icon="C:\Users\user\Desktop\WpfApplication1\WpfApplication1\files\window.png" Initialized="mainWindow_Initialized" >
 
     <!--Подключаем ресурс окна, а именно шаблон кнопки-->
     <Window.Resources>
@@ -20,10 +21,28 @@
             <ControlTemplate.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter TargetName="border" Property="Background" Value="#086CA2"></Setter>
+                    
                 </Trigger>
             </ControlTemplate.Triggers>
         </ControlTemplate>
 
+        <!--Шаблон кнопки удаления-->      
+        <ControlTemplate x:Key="DeleteButtonTemplate" TargetType="Button">
+            <Grid>
+            <Ellipse Fill="#FFDA0000"  Name="border"  Cursor="Hand" Margin="{TemplateBinding Padding}"></Ellipse>
+            <Image x:Name="btnDeleteIcon" Source="C:\Users\user\Desktop\WpfApplication1\WpfApplication1\files\delete.png" VerticalAlignment="Center" 
+                                               HorizontalAlignment="Center" Height="Auto" Width="25" OpacityMask="White" Cursor="Hand"/>
+            </Grid>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="border" Property="Fill" Value="#FF9B0000"></Setter>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="btnDeleteIcon" Property="Source" Value="C:\Users\user\Desktop\WpfApplication1\WpfApplication1\files\delete.png"></Setter>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        
         <!--Часики-->
         <Storyboard x:Key="OnLoaded1">
             <DoubleAnimation x:Name="secondAnimation" Storyboard.TargetName="secondArc" Storyboard.TargetProperty="StartAngle" 
@@ -41,6 +60,7 @@ Duration="24:0:0" RepeatBehavior="Forever" By="360" />
         </EventTrigger>
     </Window.Triggers>
 
+    
     <!--Создаём сетку размера 3 на 2-->
     <Grid>
         <!--Строки-->
@@ -65,6 +85,7 @@ Duration="24:0:0" RepeatBehavior="Forever" By="360" />
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <!--Кнопка открывающая список мероприятий-->
+            
         <Button x:Name="btnEvents" HorizontalAlignment="Stretch" 
                 VerticalAlignment="Stretch" Grid.Row="0" Grid.Column="0" FontSize="30" 
                 FontFamily="Segoe UI Semibold" FontWeight="Bold" Height="Auto" Width="Auto" Click="btnEvents_Click"
@@ -76,7 +97,7 @@ Duration="24:0:0" RepeatBehavior="Forever" By="360" />
                 VerticalAlignment="Stretch" Grid.Row="2" Grid.Column="1" Cursor="Hand" FontSize="30"
                 FontWeight="Bold" Height="Auto" Width="Auto" Foreground="#FFFBFBFB" 
                 BorderBrush="#FF13344F" OpacityMask="#FFEE1B1B" Click="btnHomePage_Click" Template="{StaticResource ButtonTemplate}" FontStretch="Expanded">
-                <Image x:Name="btnIcon" Source="C:\Users\Vladislav\Desktop\domic.png" VerticalAlignment="Center" 
+                <Image x:Name="btnIcon" Source="C:\Users\user\Desktop\WpfApplication1\WpfApplication1\files\domic.png" VerticalAlignment="Center" 
                HorizontalAlignment="Center" Height="50" Width="50" Grid.Row="2" Grid.ColumnSpan="2" OpacityMask="White" />
             </Button>
 
@@ -96,33 +117,91 @@ Duration="24:0:0" RepeatBehavior="Forever" By="360" />
 
         <!--Панель домашней страницы-->
         <Grid x:Name="homeGrid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="2" Grid.ColumnSpan="2" Background="White">
+            <Grid.RenderTransform>
+                <TranslateTransform />
+            </Grid.RenderTransform>
             <!--Строки-->
             <Grid.RowDefinitions>
                 <RowDefinition Height="300"></RowDefinition>
-                <RowDefinition Height="40"></RowDefinition>
-                <RowDefinition Height="50*"></RowDefinition>
-                <RowDefinition Height="60"></RowDefinition>
+                <RowDefinition Height="50"></RowDefinition>
+                <RowDefinition Height="219"></RowDefinition>
+                <RowDefinition Height="60*"></RowDefinition>
                 <RowDefinition Height="60"></RowDefinition>
             </Grid.RowDefinitions>
 
             <!--Лейбл на главной странице-->
             <Label x:Name="lblHomeEvents" Content="Ваши ближайшие мероприятия:" HorizontalAlignment="Center" 
-                   VerticalAlignment="Top" Grid.Row="1" Foreground="#FF35485B" FontFamily="Segoe WP Semibold" FontSize="20" Margin="98,2,99,2" FontWeight="Bold" />
+                   VerticalAlignment="Top" Grid.Row="1" Foreground="#FF35485B" FontFamily="Segoe UI Black" FontSize="22" Margin="98,2,99,2" />
 
             <!--Картинка с ссылкой на сайт миэт-->
-            <Image x:Name="image" Source="C:\Users\Vladislav\Desktop\center.png" VerticalAlignment="Top" 
+            <Image x:Name="image" Source="C:\Users\user\Desktop\WpfApplication1\WpfApplication1\files\center.png" VerticalAlignment="Top" 
                HorizontalAlignment="Center" Height="46" Width="186" Opacity="0.8" Grid.Row="4" OpacityMask="White" Cursor="Hand" MouseDown="image_MouseDown" />
 
             <!--Ближайшие события-->
-            <DataGrid x:Name="homeEventsGridData" Grid.Row="2" TextBlock.TextAlignment="Center" VerticalAlignment="Top" HorizontalAlignment="Center" Width="Auto" Height="Auto"
-                          RowHeight="50" ColumnWidth="20*" FontSize="16" FontFamily="Segoe Print"
-                          VerticalGridLinesBrush="#235B79" HorizontalGridLinesBrush="#235B79">
+            <DataGrid x:Name="homeEventsGridData"  
+              IsReadOnly="False" CanUserDeleteRows="True"
+              AutoGenerateColumns="False" SelectionMode="Extended"
+              CanUserAddRows="False" FontFamily="Cambria Math"
+              VerticalGridLinesBrush="WHITE" HorizontalGridLinesBrush="BLACK" HeadersVisibility="Column"
+              Grid.Row="2" FontSize="18.667" >
+
+                <DataGrid.Columns>
+
+                    <!--Дата и время-->
+                    <DataGridTemplateColumn Header="Дата и время"  Width="150">
+                        <DataGridTemplateColumn.HeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="HorizontalContentAlignment" 
+                 Value="Center"/>
+                            </Style>
+                        </DataGridTemplateColumn.HeaderStyle>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Дата, Mode=TwoWay, 
+                    UpdateSourceTrigger=PropertyChanged}" Width="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" FontWeight="Bold"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <!--Название-->
+                    <DataGridTemplateColumn Header="Название" Width="200*">
+                        <DataGridTemplateColumn.HeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="HorizontalContentAlignment"
+                 Value="Center" />
+                            </Style>
+                        </DataGridTemplateColumn.HeaderStyle>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Название, Mode=TwoWay, 
+                    UpdateSourceTrigger=PropertyChanged}" Width="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <!--Описание-->
+                    <DataGridTemplateColumn Header="Описание" Width="300*">
+                        <DataGridTemplateColumn.HeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="HorizontalContentAlignment"
+                 Value="Center" />
+                            </Style>
+                        </DataGridTemplateColumn.HeaderStyle>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Описание, Mode=TwoWay, 
+                    UpdateSourceTrigger=PropertyChanged}" Width="Auto" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                </DataGrid.Columns>
 
             </DataGrid>
 
             <!--Кнопка открывающая настройки-->
             <Button x:Name="btnConfigs" Content="Настройки" Background="#FF4AA8F5" 
-                HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Row="3"
+                HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="3"
                 Cursor="Hand" FontSize="16" FontFamily="Segoe UI Semibold" 
                 FontWeight="Bold" Height="30" Width="150" Foreground="White" Click="btnConfigs_Click"  Template="{StaticResource ButtonTemplate}">
             </Button>
@@ -160,7 +239,7 @@ HorizontalAlignment="Center" Width="150" Height="150" VerticalAlignment="Center"
                             <DropShadowEffect Color="#FF6BB8F7" BlurRadius="11" ShadowDepth="0"/>
                         </ed:Arc.Effect>
                     </ed:Arc>
-                    <TextBlock x:Name="time" Height="35.667" Canvas.Left="87" TextWrapping="Wrap" Canvas.Top="115" Width="94.333" FontSize="24.667"
+                    <TextBlock x:Name="time" Height="35.667" Canvas.Left="90" TextWrapping="Wrap" Canvas.Top="115" Width="94.333" FontSize="22"
 FontFamily="Segoe WP Semibold" Foreground="#64AAD0" RenderTransformOrigin="0.479,0.467">
                         <TextBlock.Effect>
                             <DropShadowEffect BlurRadius="4" Color="#FF1DD4F7" ShadowDepth="0"/>
@@ -174,21 +253,104 @@ FontFamily="Segoe WP Semibold" Foreground="#64AAD0" RenderTransformOrigin="0.479
         
         <!--Панель со списком мероприятий-->
         <Grid x:Name="eventGrid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="2" Grid.ColumnSpan="2" Background="White">
+            <Grid.RenderTransform>
+                <TranslateTransform />
+            </Grid.RenderTransform>
             <Grid x:Name="eventGrid2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="2" Grid.ColumnSpan="2" Background="White">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="10"></RowDefinition>
                     <RowDefinition></RowDefinition>
-                    <RowDefinition Height="60"></RowDefinition>
+                    <RowDefinition Height="75"></RowDefinition>
                 </Grid.RowDefinitions>
 
-                <DataGrid x:Name="eventsGridData" Grid.Row="0" TextBlock.TextAlignment="Center" VerticalAlignment="Stretch" 
-                          RowHeight="50" ColumnWidth="20*" FontSize="16" FontFamily="Segoe Print"
-                          VerticalGridLinesBrush="#235B79" HorizontalGridLinesBrush="#235B79">
+                <!--Разделяю кнопки и бд-->
+                <!--<Rectangle Fill="#235B79" HorizontalAlignment="Stretch" Height="10" Stroke="Black" VerticalAlignment="Top" Grid.Row="0"/>-->
+
+                <!--Вывод бд c мероприятиями-->
+                <DataGrid x:Name="eventsGridData"  
+              IsReadOnly="False" CanUserDeleteRows="True"
+              AutoGenerateColumns="False" SelectionMode="Extended"
+              CanUserAddRows="False" FontFamily="Cambria Math"
+              VerticalGridLinesBrush="WHITE" HorizontalGridLinesBrush="BLACK" HeadersVisibility="None"
+              Grid.Row="1" FontSize="18.667" RowHeight="80">
+
+                    <DataGrid.Columns>
+
+                        <!--Код-->
+                        <DataGridTemplateColumn Header="Код" Width="0" Visibility="Hidden">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Код, Mode=TwoWay, 
+                    UpdateSourceTrigger=PropertyChanged}" Width="Auto" TextWrapping="Wrap"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <!--Дата и время-->
+                        <DataGridTemplateColumn Header="Дата и время"  Width="150">
+                            <DataGridTemplateColumn.HeaderStyle>
+                                <Style TargetType="DataGridColumnHeader">
+                                    <Setter Property="HorizontalContentAlignment"
+                 Value="Center" />
+                                </Style>
+                            </DataGridTemplateColumn.HeaderStyle>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Дата, Mode=TwoWay, 
+                    UpdateSourceTrigger=PropertyChanged}" Width="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" FontWeight="Bold"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <!--Название-->
+                        <DataGridTemplateColumn Header="Название" Width="200*">
+                            <DataGridTemplateColumn.HeaderStyle>
+                                <Style TargetType="DataGridColumnHeader">
+                                    <Setter Property="HorizontalContentAlignment"
+                 Value="Center" />
+                                </Style>
+                            </DataGridTemplateColumn.HeaderStyle>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Название, Mode=TwoWay, 
+                    UpdateSourceTrigger=PropertyChanged}" Width="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <!--Описание-->
+                        <DataGridTemplateColumn Header="Описание" Width="300*">
+                            <DataGridTemplateColumn.HeaderStyle>
+                                <Style TargetType="DataGridColumnHeader">
+                                    <Setter Property="HorizontalContentAlignment"
+                 Value="Center" />
+                                </Style>
+                            </DataGridTemplateColumn.HeaderStyle>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Описание, Mode=TwoWay, 
+                    UpdateSourceTrigger=PropertyChanged}" Width="Auto" TextWrapping="Wrap" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <!--Удалить мероприятие-->
+                        <DataGridTemplateColumn Header="" Width="80">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button  Template="{StaticResource DeleteButtonTemplate}" Height="40" Width="40" HorizontalAlignment="Center" VerticalAlignment="Center" Click="btnDeleteEvent_Click">                  
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        
+                    </DataGrid.Columns>
                     
                 </DataGrid>
 
                 <!--Кнопка открывающая панель добавления нового мероприятия-->
                 <Button x:Name="btnNewEvent" Content="Создать" Background="#FF4AA8F5" HorizontalAlignment="Center" 
-                VerticalAlignment="Center" Grid.Row="1" Grid.Column="1" Cursor="Hand" FontSize="24" 
+                VerticalAlignment="Center" Grid.Row="2"  Cursor="Hand" FontSize="24" 
                 FontFamily="Segoe UI Semibold" FontWeight="Bold" Height="40" Width="200" Foreground="White" Click="btnNewEvent_Click" Template="{StaticResource ButtonTemplate}" FontStyle="Italic">
                 </Button>
                 
@@ -197,17 +359,105 @@ FontFamily="Segoe WP Semibold" Foreground="#64AAD0" RenderTransformOrigin="0.479
 
         <!--Панель со списком дней рождений-->
         <Grid x:Name="birhtDayGrid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="2" Grid.ColumnSpan="2" Background="White">
-            <DataGrid x:Name="birthDayGridData" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            <Grid.RenderTransform>
+                <TranslateTransform />
+            </Grid.RenderTransform>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="10"></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <!--Разделяю кнопки и бд-->
+            <Rectangle Fill="#235B79" HorizontalAlignment="Stretch" Height="10" Stroke="Black" VerticalAlignment="Top" Grid.Row="0"/>
+
+            <DataGrid x:Name="birthDayGridData"  
+              IsReadOnly="False" CanUserDeleteRows="True"
+              AutoGenerateColumns="False" SelectionMode="Extended"
+              CanUserAddRows="False" FontFamily="Cambria Math"
+              VerticalGridLinesBrush="WHITE" HorizontalGridLinesBrush="BLACK" HeadersVisibility="Column"
+              Grid.Row="1" FontSize="18.667" RowHeight="100" >
+
+                <DataGrid.Columns>
+
+                    <!--Имя-->
+                    <DataGridTemplateColumn Header="Имя"  Width="100*">
+                        <DataGridTemplateColumn.HeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="HorizontalContentAlignment"
+                 Value="Center" />
+                            </Style>
+                        </DataGridTemplateColumn.HeaderStyle>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Имя, Mode=TwoWay, 
+                    UpdateSourceTrigger=PropertyChanged}" Width="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" FontWeight="Bold"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <!--Фамилия-->
+                    <DataGridTemplateColumn Header="Фамилия" Width="100*">
+                        <DataGridTemplateColumn.HeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="HorizontalContentAlignment"
+                 Value="Center" />
+                            </Style>
+                        </DataGridTemplateColumn.HeaderStyle>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Фамилия, Mode=TwoWay, 
+                    UpdateSourceTrigger=PropertyChanged}" Width="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" FontWeight="Bold"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <!--Отчество-->
+                    <DataGridTemplateColumn Header="Отчество" Width="100*">
+                        <DataGridTemplateColumn.HeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="HorizontalContentAlignment"
+                 Value="Center" />
+                            </Style>
+                        </DataGridTemplateColumn.HeaderStyle>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Отчество, Mode=TwoWay, 
+                    UpdateSourceTrigger=PropertyChanged}" Width="Auto" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <!--Дата рождения-->
+                    <DataGridTemplateColumn Header="Дата рождения" Width="150*">
+                        <DataGridTemplateColumn.HeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="HorizontalContentAlignment"
+                 Value="Center" />
+                            </Style>
+                        </DataGridTemplateColumn.HeaderStyle>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding ДатаРождения, Mode=TwoWay, 
+                    UpdateSourceTrigger=PropertyChanged}" Width="Auto" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                </DataGrid.Columns>
+
+            </DataGrid>
         </Grid>
 
         <!--Панель добавления мероприятия-->
         <Grid x:Name="newEventGrid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="2" Grid.ColumnSpan="2" Background="White">
+            <Grid.RenderTransform>
+                <TranslateTransform />
+            </Grid.RenderTransform>
             <!--Строки-->
             <Grid.RowDefinitions>
                 <RowDefinition Height="50"></RowDefinition>
-                <RowDefinition Height="100*"></RowDefinition>
-                <RowDefinition Height="80*"></RowDefinition>
-                <RowDefinition Height="40"></RowDefinition>
+                <RowDefinition Height="220"></RowDefinition>
+                <RowDefinition Height="50*"></RowDefinition>
+                <RowDefinition Height="100"></RowDefinition>
             </Grid.RowDefinitions>
             <!--Столбцы-->
             <Grid.ColumnDefinitions>
@@ -217,40 +467,33 @@ FontFamily="Segoe WP Semibold" Foreground="#64AAD0" RenderTransformOrigin="0.479
             </Grid.ColumnDefinitions>
 
             <Label x:Name="lblEventName" Content="Название:" HorizontalAlignment="Center" 
-                   VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" Foreground="Black" FontFamily="Yu Gothic UI Semibold" FontSize="18" Margin="98,2,99,2" />
+                   VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" Foreground="Black" FontFamily="Sitka Small" FontSize="16" Margin="98,2,99,2" />
             <Label x:Name="lblEventDescription" Content="Описание:" HorizontalAlignment="Center" 
-                   VerticalAlignment="Center" Grid.Column="0" Grid.Row="1" Foreground="Black" FontFamily="Yu Gothic UI Semibold" FontSize="18" Margin="98,32" />
+                   VerticalAlignment="Center" Grid.Column="0" Grid.Row="1" Foreground="Black" FontFamily="Sitka Small" FontSize="15" Margin="98,32" />
             <Label x:Name="lblEventDate" Content="Дата и время:" HorizontalAlignment="Center" 
-                   VerticalAlignment="Center" Grid.Column="0" Grid.Row="2" Foreground="Black" FontFamily="Yu Gothic UI Semibold" FontSize="18" Margin="86,23,87,23" />
+                   VerticalAlignment="Top" Grid.Column="0" Grid.Row="2" Foreground="Black" FontFamily="Sitka Small" FontSize="15" Margin="86,23,87,23" />
             <Button x:Name="btnAddEvent" Content="Сохранить" Background="#FF4AA8F5" 
                 HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Row="3" 
-                Grid.Column="0" Cursor="Hand" FontSize="16" FontFamily="Microsoft YaHei UI Light" 
-                FontWeight="Bold" Height="30" Width="150" Foreground="White" Click="btnAddEvent_Click"  Grid.ColumnSpan="2"  Template="{StaticResource ButtonTemplate}" Margin="196,0,149,0">
+                Grid.Column="0" Cursor="Hand" FontSize="30" FontFamily="Segoe UI Semibold" 
+                FontWeight="Bold" Height="50" Width="200" Foreground="White" Click="btnAddEvent_Click"  Grid.ColumnSpan="2"  Template="{StaticResource ButtonTemplate}" Margin="196,0,149,0">
             </Button>
 
-            <TextBox x:Name="tbEventName" Grid.Column="1" Grid.Row="0" Text="Название" VerticalAlignment="Center" MaxLength="50" HorizontalAlignment="Stretch" Grid.ColumnSpan="2" Margin="0,6"/>
-            <TextBox x:Name="tbEventDescription" Grid.Column = "1" Grid.Row = "1" TextWrapping="Wrap" Text="Описание" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" AcceptsReturn="True" Grid.ColumnSpan="2"/>
-            <Grid Grid.Column="1"  Grid.Row="2" Grid.ColumnSpan="2">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition  Width="120"/>
-                    <ColumnDefinition Width="60"/>
-                    <ColumnDefinition Width="20"/>
-                    <ColumnDefinition Width="15"/>
-                    <ColumnDefinition Width="20*"/>
-                </Grid.ColumnDefinitions>
-                <DatePicker x:Name="dateOfEvent" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                <TextBox x:Name="tbHours" Grid.Column = "2"  MaxLength="2" Text="hh" VerticalAlignment="Center" HorizontalAlignment="left"/>
-                <TextBox x:Name="tbMinuts" Grid.Column = "4" MaxLength="2" Text="mm" VerticalAlignment="Center" HorizontalAlignment="left"/>
-                <Label x:Name="lbl1" Content="Время:" HorizontalAlignment="Center" 
-                   VerticalAlignment="Center" Grid.Column="1" Foreground="Black" FontFamily="Microsoft Sans Serif" FontSize="13.333" />
-                <Label x:Name="lbl2" Content=":" HorizontalAlignment="Center" 
-                   VerticalAlignment="Center" Grid.Column="3" Foreground="Black" FontFamily="Microsoft Sans Serif" FontSize="13.333" />
-            </Grid>
+            <TextBox x:Name="tbEventName" Grid.Column="1" Grid.Row="0" FontFamily="Sitka Small" FontSize="14.667" Text="Название" VerticalAlignment="Center" 
+                     MaxLength="50" HorizontalAlignment="Stretch" Grid.ColumnSpan="2" Margin="0,6"/>
+            <TextBox x:Name="tbEventDescription" Grid.Column = "1" Grid.Row = "1" FontFamily="Sitka Small" FontSize="14.667" TextWrapping="Wrap" Text="Описание" 
+                     VerticalAlignment="Stretch" HorizontalAlignment="Stretch" AcceptsReturn="True" Grid.ColumnSpan="2"  MaxLength="80"/>
+            <wpfTool:DateTimePicker x:Name="dateOfEvent" Grid.Row="2" AutoCloseCalendar="False"  Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Top" HorizontalAlignment="Stretch" FontFamily="Sitka Small"
+                                    FontSize="14.667" Margin="0,25,0,0" FontWeight="Bold" MouseWheelActiveTrigger="Disabled" TimePickerVisibility="Visible"/>              
         </Grid>
         
         <!--Панель с настройками-->
         <Grid x:Name="configGrid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="2" Grid.ColumnSpan="2" Background="White">
-
+            <Grid.RenderTransform>
+                <TranslateTransform />
+            </Grid.RenderTransform>
+            <Image x:Name="btnKowakIcon" Source="C:\Users\user\Desktop\WpfApplication1\WpfApplication1\files\kowak.jpg" VerticalAlignment="Center" 
+                                               HorizontalAlignment="Center" Height="300" OpacityMask="White" />
         </Grid>
+        
     </Grid>
 </Window>
