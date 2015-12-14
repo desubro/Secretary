@@ -25,7 +25,7 @@ using System.Data;
 
 namespace WpfApplication1
 {
-    
+
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
@@ -35,14 +35,12 @@ namespace WpfApplication1
         private DispatcherTimer dT = new DispatcherTimer();
         SpeechSynthesizer synthesizer = new SpeechSynthesizer();
         DispatcherTimer timer;
-        int code, parse;
         String path = "C:\\Users\\user\\Desktop\\WpfApplication1\\WpfApplication1\\files\\BD.accdb";
         public MainWindow()
         {
             InitializeComponent();
             //Sets the time
             timer = new DispatcherTimer();
-            dateOfEvent.Value = DateTime.Now;
             timer.Interval = TimeSpan.FromSeconds(1.00);
             timer.Start();
             timer.Tick += new EventHandler(delegate (object s, EventArgs a)
@@ -57,10 +55,10 @@ namespace WpfApplication1
         private void btnEvents_Click(object sender, RoutedEventArgs e)
         {
             lblWhereWeAre.Content = "Мероприятия";
+            fullEventGrid.Visibility = Visibility.Hidden;
             eventGrid.Visibility = Visibility.Visible;
             btnNewEvent.Visibility = Visibility.Visible;
             newEventGrid.Visibility = Visibility.Hidden;
-            configGrid.Visibility = Visibility.Hidden;
             birhtDayGrid.Visibility = Visibility.Hidden;
             homeGrid.Visibility = Visibility.Hidden;
             CDataBase.TableWrite(path, "Мероприятия", eventsGridData);
@@ -72,8 +70,8 @@ namespace WpfApplication1
         private void btnBirthDay_Click(object sender, RoutedEventArgs e)
         {
             lblWhereWeAre.Content = "Дни Рождения";
+            fullEventGrid.Visibility = Visibility.Hidden;
             newEventGrid.Visibility = Visibility.Hidden;
-            configGrid.Visibility = Visibility.Hidden;
             birhtDayGrid.Visibility = Visibility.Visible;
             homeGrid.Visibility = Visibility.Hidden;
             eventGrid.Visibility = Visibility.Hidden;
@@ -86,39 +84,30 @@ namespace WpfApplication1
         private void btnNewEvent_Click(object sender, RoutedEventArgs e)
         {
             lblWhereWeAre.Content = "Новое мероприятие";
+            fullEventGrid.Visibility = Visibility.Hidden;
             newEventGrid.Visibility = Visibility.Visible;
-            configGrid.Visibility = Visibility.Hidden;
+            dateOfEvent.DisplayDateStart = DateTime.Now;
             birhtDayGrid.Visibility = Visibility.Hidden;
             homeGrid.Visibility = Visibility.Hidden;
             slideAnimationFrom(eventGrid);
             slideAnimationTo(newEventGrid);
+            timeOfEvent.Text = "0:00";
             tbEventName.Text = "Название";
             tbEventDescription.Text = "Описание";
-
-        }
-
-        private void btnConfigs_Click(object sender, RoutedEventArgs e)
-        {
-            configGrid.Visibility = Visibility.Visible;
-            eventGrid.Visibility = Visibility.Hidden;
-            birhtDayGrid.Visibility = Visibility.Hidden;
-            newEventGrid.Visibility = Visibility.Hidden;
-            lblWhereWeAre.Content = "Настройки";
-            slideAnimationFrom(homeGrid);
-            slideAnimationTo(configGrid);
 
         }
 
         private void mainWindow_Initialized(object sender, EventArgs e)
         {
             CDataBase.TableWriteLimit(path, "Мероприятия", homeEventsGridData);
+            CDataBase.TableWriteLimit(path, "ДР", homeBirthDayGridData);
             eventGrid.Visibility = Visibility.Hidden;
             birhtDayGrid.Visibility = Visibility.Hidden;
             newEventGrid.Visibility = Visibility.Hidden;
-            configGrid.Visibility = Visibility.Hidden;
+            fullEventGrid.Visibility = Visibility.Hidden;
             btnNewEvent.Visibility = Visibility.Hidden;
             synthesizer.Rate = 2;
-           
+
 
         }
 
@@ -127,7 +116,7 @@ namespace WpfApplication1
 
             lblWhereWeAre.Content = "Электронный секретарь";
             newEventGrid.Visibility = Visibility.Hidden;
-            configGrid.Visibility = Visibility.Hidden;
+            fullEventGrid.Visibility = Visibility.Hidden;
             birhtDayGrid.Visibility = Visibility.Hidden;
             homeGrid.Visibility = Visibility.Visible;
             eventGrid.Visibility = Visibility.Hidden;
@@ -150,16 +139,20 @@ namespace WpfApplication1
         private void btnAddEvent_Click(object sender, RoutedEventArgs e)
         {
             String date, name, description;
+            if (tbEventName.Text.ToString() == "") { MessageBox.Show("Вы не задали название мероприятия"); return; }
             name = tbEventName.Text.ToString();
+            if (tbEventDescription.Text.ToString() == "") { MessageBox.Show("Вы не задали описание мероприятия"); return; }
             description = tbEventDescription.Text.ToString();
-            date = dateOfEvent.Text.ToString();
+            if (timeOfEvent.Text.ToString() == "") { MessageBox.Show("Вы не задали время мероприятия"); return; }
+            date = dateOfEvent.Text.ToString()+" "+timeOfEvent.Text.ToString();
+            if (DateTime.Parse(date) < DateTime.Now) { MessageBox.Show("Время заданного вами мероприятия прошло"); return; }
 
             CDataBase.insertEvent(path, date, name, description);
 
             lblWhereWeAre.Content = "Мероприятия";
-            configGrid.Visibility = Visibility.Hidden;
             birhtDayGrid.Visibility = Visibility.Hidden;
             homeGrid.Visibility = Visibility.Hidden;
+            fullEventGrid.Visibility = Visibility.Hidden;
             eventGrid.Visibility = Visibility.Visible;
             CDataBase.TableWrite(path, "Мероприятия", eventsGridData);
             slideAnimationTo(eventGrid);
@@ -176,6 +169,7 @@ namespace WpfApplication1
         //Удаление мероприятия
         private void btnDeleteEvent_Click(object sender, EventArgs e)
         {
+            int code, parse;
             parse = eventsGridData.SelectedIndex;
             DataRowView dataRow = eventsGridData.SelectedValue as DataRowView;
             code = int.Parse(dataRow[0].ToString());
@@ -189,6 +183,23 @@ namespace WpfApplication1
 
         }
 
+        private void eventsGridData_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            int parse;
+            slideAnimationFrom(eventGrid);
+            slideAnimationTo(fullEventGrid);
+            parse = eventsGridData.SelectedIndex;
+            DataRowView dataRow = eventsGridData.SelectedValue as DataRowView;
+            showDateOfEvent.DisplayDateStart = DateTime.Parse(dataRow[1].ToString());
+            showDateOfEvent.DisplayDateEnd = DateTime.Parse(dataRow[1].ToString());
+            showDateOfEvent.SelectedDate = DateTime.Parse(dataRow[1].ToString());
+            lblWhereWeAre.Content = dataRow[2].ToString();
+            lblShowEventName.Content = dataRow[2].ToString();
+            lblShowEventTime.Content = (DateTime.Parse(dataRow[1].ToString())).ToString("HH:mm:ss");
+            lblShowEventDescription.Text = dataRow[3].ToString();
+            fullEventGrid.Visibility = Visibility.Visible;
+        }
+
         //Анимации панелей
         private void slideAnimationTo(Grid gridName)
         {
@@ -196,7 +207,7 @@ namespace WpfApplication1
 
             DoubleAnimation slide = new DoubleAnimation();
             slide.To = 0;
-            slide.From = mainWindow.Width*1.5;
+            slide.From = mainWindow.Width * 1.5;
             slide.Duration = new Duration(TimeSpan.FromMilliseconds(300.0));
 
             // Set the target of the animation
@@ -207,6 +218,15 @@ namespace WpfApplication1
             sb.Children.Add(slide);
             sb.Begin();
         }
+
+        private void btnBackToEvent_Click(object sender, RoutedEventArgs e)
+        {
+            lblWhereWeAre.Content = "Мероприятия";
+            CDataBase.TableWrite(path, "Мероприятия", eventsGridData);
+            slideAnimationTo(eventGrid);
+            slideAnimationFrom(fullEventGrid);
+        }
+
         private void slideAnimationFrom(Grid gridName)
         {
             Storyboard sb = new Storyboard();
@@ -214,7 +234,7 @@ namespace WpfApplication1
             DoubleAnimation slide = new DoubleAnimation();
             slide.To = -mainWindow.Width * 3;
             slide.From = 0;
-            slide.Duration = new Duration(TimeSpan.FromMilliseconds((3/2)*300.0));
+            slide.Duration = new Duration(TimeSpan.FromMilliseconds((3 / 2) * 300.0));
 
             // Set the target of the animation
             Storyboard.SetTarget(slide, gridName);
