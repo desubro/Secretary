@@ -1,3 +1,4 @@
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +11,19 @@ namespace WpfApplication1
 {
     static class CDataBase
     {
+        public static void OutOfDateEventDelete(String path)
+        {
+            OleDbConnection con = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + path);
+            con.Open();
+            DateTime now = DateTime.Now;
+            now = now.AddHours(1);
+            OleDbCommand cmd = new OleDbCommand("DELETE * FROM Мероприятия WHERE Дата < DATEADD('h', -1, NOW())", con);
+            cmd.ExecuteNonQuery();
+            con.Close();
+        }
         public static void TableWrite(String path, String table, DataGrid GridData)
         {
+            OutOfDateEventDelete(path);
             OleDbConnection con = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + path);
             con.Open();
             OleDbDataAdapter da;
@@ -29,10 +41,14 @@ namespace WpfApplication1
 
         public static void TableWriteLimit(String path, String table, DataGrid GridData)
         {
+            OutOfDateEventDelete(path);
             OleDbConnection con = new OleDbConnection("Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + path);
             con.Open();
             OleDbDataAdapter da;
-            da = new OleDbDataAdapter("SELECT DISTINCT TOP 4 Дата, Название, Описание From " + table + " ORDER BY Дата;", con);
+            if (table == "ДР")
+                da = new OleDbDataAdapter("SELECT Имя, Фамилия, Отчество From " + table + " WHERE DATEPART('m', ДатаРождения)=DATEPART('m', NOW()) AND DATEPART('d', ДатаРождения)=DATEPART('d', NOW());", con);
+            else
+                da = new OleDbDataAdapter("SELECT Дата, Название, Описание From " + table + " WHERE Дата < DATEADD('h', 24, NOW()) ORDER BY Дата;", con);
             OleDbCommandBuilder cb = new OleDbCommandBuilder(da);
             DataSet ds = new DataSet();
 
@@ -47,8 +63,8 @@ namespace WpfApplication1
             con.Open();
             OleDbCommand cmd = new OleDbCommand("INSERT INTO Мероприятия (Дата, Название, Описание)" + " VALUES (?, ?, ?)", con);
             cmd.Parameters.Add("Дата", OleDbType.Date, 30).Value = date;
-            cmd.Parameters.Add("Название", OleDbType.VarWChar, 30).Value = name;
-            cmd.Parameters.Add("Описание", OleDbType.VarWChar, 30).Value = description;
+            cmd.Parameters.Add("Название", OleDbType.VarWChar, 25).Value = name;
+            cmd.Parameters.Add("Описание", OleDbType.VarWChar, 256).Value = description;
             cmd.ExecuteNonQuery();
             con.Close();
         }
@@ -61,5 +77,7 @@ namespace WpfApplication1
             cmd.ExecuteNonQuery();
             con.Close();
         }
+
+       
     }
 }
